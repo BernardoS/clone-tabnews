@@ -1,17 +1,10 @@
 import { Client } from "pg";
 
 async function query(queryObject) {
-  const client = new Client({
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    user: process.env.POSTGRES_USER,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    ssl: getSSLValues(),
-  });
+  let client;
 
   try {
-    await client.connect();
+    client = await getNewClient();
     const result = await client.query(queryObject);
     return result;
   } catch (err) {
@@ -20,6 +13,19 @@ async function query(queryObject) {
   } finally {
     await client.end();
   }
+}
+
+async function getNewClient() {
+  const client = new Client({
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
+    user: process.env.POSTGRES_USER,
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD,
+    ssl: getSSLValues(),
+  });
+  await client.connect();
+  return client;
 }
 
 async function getCurrentVersion() {
@@ -37,15 +43,16 @@ async function getOpenConnections(databaseName) {
     text: "SELECT COUNT(*)::int FROM pg_stat_activity WHERE datname = $1;",
     values: [databaseName],
   });
-  //,
+
   return openConnections.rows[0].count;
 }
 
 export default {
-  query: query,
-  getCurrentVersion: getCurrentVersion,
-  getMaxConnections: getMaxConnections,
-  getOpenConnections: getOpenConnections,
+  query,
+  getCurrentVersion,
+  getMaxConnections,
+  getOpenConnections,
+  getNewClient,
 };
 
 function getSSLValues() {
@@ -54,5 +61,6 @@ function getSSLValues() {
       ca: process.env.POSTGRES_CA,
     };
   }
-  return process.env.NODE_ENV == "development" ? false : true;
+
+  return process.env.NODE_ENV == "production" ? true : false;
 }
