@@ -47,13 +47,15 @@ async function getOpenConnections(databaseName) {
   return openConnections.rows[0].count;
 }
 
-export default {
+const database = {
   query,
   getCurrentVersion,
   getMaxConnections,
   getOpenConnections,
   getNewClient,
 };
+
+export default database;
 
 function getSSLValues() {
   if (process.env.POSTGRES_CA) {
