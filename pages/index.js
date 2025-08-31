@@ -25,9 +25,9 @@ function Home() {
       />
       <p>
         Eu não sei você, mas eu <b>amo assistir filmes</b> (e séries também) e
-        <b>conhecer novas histórias.</b> Outra coisa tão legal quanto, é
-        <b>conversar com o pessoal</b> que também gosta e ainda pode{" "}
-        <b>indicar novas histórias</b> para a gente conhecer..
+        <b> conhecer novas histórias.</b> Outra coisa tão legal quanto, é
+        <b> conversar com o pessoal</b> que também gosta e ainda poder
+        <b> indicar novas histórias</b> para a gente conhecer.
       </p>
       <p>
         É por isso que o <b>CinemaTab tá sendo criado</b>, topa me ajudar a
