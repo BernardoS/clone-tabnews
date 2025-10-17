@@ -23,15 +23,14 @@ async function listPendingMigrations() {
     });
 
     return pendingMigrations;
-  } catch(error){
+  } catch (error) {
     const publicErrorObject = new ServiceError({
       cause: error,
-      message : "Erro ao recuperar as migrações"
+      message: "Erro ao recuperar as migrações",
     });
 
     throw publicErrorObject;
-  
-  }finally {
+  } finally {
     await dbClient?.end();
   }
 }
@@ -49,16 +48,14 @@ async function runPendingMigrations() {
     });
 
     return migratedMigrations;
-
-  } catch(error){
-
+  } catch (error) {
     const publicErrorObject = new ServiceError({
       cause: error,
-      message : "Erro ao executar as migrações"
+      message: "Erro ao executar as migrações",
     });
 
     throw publicErrorObject;
-  }finally {
+  } finally {
     await dbClient?.end();
   }
 }
