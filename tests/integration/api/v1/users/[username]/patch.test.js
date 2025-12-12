@@ -46,7 +46,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       expect(firstResponse.status).toBe(201);
 
-      const secondResponse = await fetch("http://localhost:3000/api/v1/users", {
+      await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       expect(firstResponse.status).toBe(201);
 
-      const secondResponse = await fetch("http://localhost:3000/api/v1/users", {
+      await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
