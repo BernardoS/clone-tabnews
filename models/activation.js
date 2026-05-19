@@ -39,41 +39,44 @@ ${webserver.origin}/cadastro/ativar/${activationToken.id}
   });
 }
 
-async function FindOneByUserId(userId) {
-  const tokenFound = await runSelectQuery(userId);
+async function findOneValidById(tokenId) {
+  const tokenFound = await runSelectQuery(tokenId);
 
   return tokenFound;
 
-  async function runSelectQuery(userId) {
-    const result = await database.query({
-      text: `SELECT
-                *
-             FROM 
-                user_activation_tokens
-             WHERE
-                user_id = $1
-             LIMIT 
-                1
-             
-          ;`,
-      values: [userId],
+  async function runSelectQuery(tokenId) {
+    const results = await database.query({
+      text: `
+        SELECT
+          *
+        FROM
+          user_activation_tokens 
+        WHERE
+          id = $1
+          AND used_at is null
+          AND expires_at > NOW()
+        LIMIT
+          1`,
+      values: [tokenId],
     });
 
-    if (result.rowCount === 0) {
+    if (results.rowCount === 0) {
       throw new NotFoundError({
-        message: "O username informado não foi encontrado no sistema.",
-        action: "Verifique se o username está digitado corretamente.",
+        message:
+          "O token de ativação não foi encontrado no sistema ou expirado.",
+        action:
+          "Verifique se este usuário realizou o cadastro e tente novamente.",
       });
     }
 
-    return result.rows[0];
+    return results.rows[0];
   }
 }
 
 const activation = {
   sendEmailToUser,
   create,
-  FindOneByUserId,
+  findOneValidById,
 };
 
 export default activation;

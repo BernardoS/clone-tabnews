@@ -1,5 +1,7 @@
+import webserver from "infra/webserver";
 import activation from "models/activation";
 import orchestrator from "tests/orchestrator";
+import { version as uuidVersion } from "uuid";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -45,10 +47,6 @@ describe("Use case: Registration Flow (all successful)", () => {
   test("Receive activation email", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    const activationToken = await activation.FindOneByUserId(
-      createUserResponseBody.id,
-    );
-
     expect(lastEmail.sender).toBe("<contato@cinematab.com.br>");
 
     expect(lastEmail.recipients[0]).toBe("<registration.flow@bernardo.dev>");
@@ -57,6 +55,18 @@ describe("Use case: Registration Flow (all successful)", () => {
 
     expect(lastEmail.text).toContain("RegistrationFlow");
 
-    expect(lastEmail.text).toContain(activationToken.id);
+    const emailActivationTokenId = orchestrator.extractUUID(lastEmail.text);
+
+    expect(lastEmail.text).toContain(
+      `${webserver.origin}/cadastro/ativar/${emailActivationTokenId}`,
+    );
+
+    const validToken = await activation.findOneValidById(
+      emailActivationTokenId,
+    );
+
+    expect(validToken.user_id).toBe(createUserResponseBody.id);
+
+    expect(uuidVersion(validToken.id)).toBe(4);
   });
 });
