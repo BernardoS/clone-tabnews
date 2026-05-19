@@ -1,6 +1,7 @@
 import webserver from "infra/webserver.js";
 import activation from "models/activation.js";
 import user from "models/user.js";
+import { headers } from "next/headers";
 import orchestrator from "tests/orchestrator.js";
 import { version as uuidVersion } from "uuid";
 
@@ -91,5 +92,29 @@ describe("Use case: Registration Flow (all successful)", () => {
     );
 
     expect(activatedUser.features).toEqual(["create:session"]);
+  });
+
+  test("Login", async () => {
+    const createSessionResponse = await fetch(
+      "http://localhost:3000/api/v1/sessions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "registration.flow@bernardo.dev",
+          password: "RegistrationFlowPassword",
+        }),
+      },
+    );
+
+    expect(createSessionResponse.status).toBe(201);
+
+    const createSessionResponseeBody = await createSessionResponse.json();
+
+    expect(createSessionResponseeBody.user_id).toEqual(
+      createUserResponseBody.id,
+    );
   });
 });
