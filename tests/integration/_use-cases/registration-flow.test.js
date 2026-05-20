@@ -15,6 +15,7 @@ beforeAll(async () => {
 describe("Use case: Registration Flow (all successful)", () => {
   let createUserResponseBody;
   let emailActivationTokenId;
+  let createSessionResponseBody;
 
   test("Create user account", async () => {
     const createUserResponse = await fetch(
@@ -91,7 +92,7 @@ describe("Use case: Registration Flow (all successful)", () => {
       activationResponseBody.user_id,
     );
 
-    expect(activatedUser.features).toEqual(["create:session"]);
+    expect(activatedUser.features).toEqual(["create:session", "read:sessions"]);
   });
 
   test("Login", async () => {
@@ -111,10 +112,36 @@ describe("Use case: Registration Flow (all successful)", () => {
 
     expect(createSessionResponse.status).toBe(201);
 
-    const createSessionResponseeBody = await createSessionResponse.json();
+    createSessionResponseBody = await createSessionResponse.json();
 
-    expect(createSessionResponseeBody.user_id).toEqual(
+    expect(createSessionResponseBody.user_id).toEqual(
       createUserResponseBody.id,
     );
+  });
+
+  test("Get user information", async () => {
+    const userInfoResponse = await fetch("http://localhost:3000/api/v1/user", {
+      headers: {
+        Cookie: `session_id=${createSessionResponseBody.token}`,
+      },
+    });
+
+    expect(userInfoResponse.status).toBe(200);
+
+    const userInfoResponseResponseBody = await userInfoResponse.json();
+
+    expect(userInfoResponseResponseBody).toEqual({
+      id: createUserResponseBody.id,
+      username: "RegistrationFlow",
+      email: createUserResponseBody.email,
+      password: createUserResponseBody.password,
+      features: ["create:session", "read:sessions"],
+      created_at: createUserResponseBody.created_at,
+      updated_at: userInfoResponseResponseBody.updated_at,
+    });
+
+    expect(uuidVersion(userInfoResponseResponseBody.id)).toBe(4);
+    expect(Date.parse(userInfoResponseResponseBody.created_at)).not.toBeNaN();
+    expect(Date.parse(userInfoResponseResponseBody.updated_at)).not.toBeNaN();
   });
 });
