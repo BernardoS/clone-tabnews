@@ -14,9 +14,9 @@ async function patchHandler(request, response) {
 
   const validToken = await activation.findOneValidById(activationTokenId);
 
-  const usedToken = await activation.markTokenAsUsed(validToken.id);
-
   await activation.activateUserByUserId(validToken.user_id);
+
+  const usedToken = await activation.markTokenAsUsed(validToken.id);
 
   return response.status(200).json(usedToken);
 }

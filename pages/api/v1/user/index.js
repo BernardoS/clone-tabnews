@@ -6,7 +6,7 @@ import user from "models/user.js";
 const router = createRouter();
 
 router.use(controller.injectAnonymousOrUser);
-router.get(controller.canRequest("read:sessions"), getHandler);
+router.get(controller.canRequest("read:session"), getHandler);
 
 export default router.handler(controller.errorHandlers);
 
