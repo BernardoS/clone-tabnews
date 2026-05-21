@@ -3,7 +3,7 @@ import orchestrator from "tests/orchestrator";
 import user from "models/user.js";
 import password from "models/password";
 
-beforeAll(async () => {
+beforeEach(async () => {
   await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
   await orchestrator.runPendingMigrations();
@@ -105,6 +105,45 @@ describe("PATCH /api/v1/users/[username]", () => {
         message: "O username informado já está sendo utilizado.",
         action: "Utilize outro username para realizar esta operação.",
         status_code: 400,
+      });
+    });
+
+    test("With user2 targeting user1", async () => {
+      await orchestrator.createUser({
+        username: "user1",
+      });
+
+      const createdUser2 = await orchestrator.createUser({
+        username: "user2",
+      });
+
+      const activatedUser = await orchestrator.activateUser(createdUser2.id);
+      const sessionObject = await orchestrator.createSession(activatedUser.id);
+
+      const patchResponse = await fetch(
+        "http://localhost:3000/api/v1/users/user1",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObject.token}`,
+          },
+          body: JSON.stringify({
+            username: "user3",
+          }),
+        },
+      );
+
+      expect(patchResponse.status).toBe(403);
+
+      const patchResponseBody = await patchResponse.json();
+
+      expect(patchResponseBody).toEqual({
+        action:
+          "Verifique se você possui a feature necessária para atualizar outro usuário.",
+        message: "Você não possui permissão para atualizar outro usuário.",
+        name: "ForbiddenError",
+        status_code: 403,
       });
     });
 
