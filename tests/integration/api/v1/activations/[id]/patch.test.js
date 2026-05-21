@@ -148,6 +148,7 @@ describe("PATCH /api/v1/activations/[id]", () => {
       expect(activatedUser.features).toEqual([
         "create:session",
         "read:session",
+        "update:user",
       ]);
     });
 
