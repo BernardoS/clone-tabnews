@@ -25,8 +25,6 @@ async function patchHandler(request, response) {
 
   const userInputValues = request.body;
 
-  // user, feature, resource
-
   const userTryingToPatch = request.context.user;
 
   const targetUser = await user.findOneByUsername(username);
