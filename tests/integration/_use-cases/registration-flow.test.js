@@ -1,7 +1,6 @@
 import webserver from "infra/webserver.js";
 import activation from "models/activation.js";
 import user from "models/user.js";
-import { headers } from "next/headers";
 import orchestrator from "tests/orchestrator.js";
 import { version as uuidVersion } from "uuid";
 

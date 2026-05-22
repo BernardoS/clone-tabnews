@@ -12,7 +12,7 @@ beforeEach(async () => {
 describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With unique 'username'", async () => {
-      const createdUser = await orchestrator.createUser({
+      await orchestrator.createUser({
         username: "uniqueUser1",
       });
 
