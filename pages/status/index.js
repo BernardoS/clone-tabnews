@@ -61,7 +61,7 @@ function DatabaseInfo() {
         <li>
           {databaseVersionText != null && databaseVersionText != undefined
             ? `Versão:${databaseVersionText}`
-            : "..."}
+            : "Versão:..."}
         </li>
         <li>Limite de conexões:{databaseMaxConnectionsText}</li>
         <li>Conexões abertas:{databaseOpenConnectionstionText}</li>
