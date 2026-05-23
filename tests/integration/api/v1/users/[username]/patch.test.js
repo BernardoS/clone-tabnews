@@ -2,6 +2,7 @@ import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator";
 import user from "models/user.js";
 import password from "models/password";
+import webserver from "infra/webserver.js";
 
 beforeEach(async () => {
   await orchestrator.waitForAllServices();
@@ -17,7 +18,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
 
       const patchResponse = await fetch(
-        "http://localhost:3000/api/v1/users/uniqueuser1",
+        `http://localhost:3000/api/v1/users/uniqueuser1`,
         {
           method: "PATCH",
           headers: {
@@ -49,7 +50,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/usuarioInexistente",
+        `http://localhost:3000/api/v1/users/usuarioInexistente`,
         {
           method: "PATCH",
           headers: {
@@ -83,7 +84,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(activatedUser.id);
 
       const patchResponse = await fetch(
-        "http://localhost:3000/api/v1/users/user2",
+        `${webserver.origin}/api/v1/users/user2`,
         {
           method: "PATCH",
           headers: {
@@ -121,7 +122,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(activatedUser.id);
 
       const patchResponse = await fetch(
-        "http://localhost:3000/api/v1/users/user1",
+        `${webserver.origin}/api/v1/users/user1`,
         {
           method: "PATCH",
           headers: {
@@ -194,7 +195,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObject = await orchestrator.createSession(activatedUser.id);
 
       const patchResponse = await fetch(
-        "http://localhost:3000/api/v1/users/seconduniqueuser1",
+        `${webserver.origin}/api/v1/users/seconduniqueuser1`,
         {
           method: "PATCH",
           headers: {
