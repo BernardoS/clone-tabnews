@@ -45,6 +45,7 @@ describe("DELETE /api/v1/sessions/", () => {
         maxAge: -1,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
     });
 
@@ -90,6 +91,7 @@ describe("DELETE /api/v1/sessions/", () => {
         maxAge: -1,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
     });
 
@@ -144,6 +146,7 @@ describe("DELETE /api/v1/sessions/", () => {
         maxAge: -1,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
 
       // Double Check assertions

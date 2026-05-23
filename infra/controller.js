@@ -56,6 +56,7 @@ function clearSessionCookie(response) {
     maxAge: -1,
     secure: process.env.NODE_ENV == "production",
     httpOnly: true,
+    sameSite: "lax",
   });
 
   response.setHeader("Set-Cookie", setCookie);
