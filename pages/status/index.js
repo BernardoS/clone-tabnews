@@ -46,7 +46,7 @@ function DatabaseInfo() {
   if (!isLoading && data) {
     let databaseInfo = data.dependencies.database;
 
-    databaseVersionText = databaseInfo.version.toString();
+    databaseVersionText = databaseInfo.version?.toString();
     databaseMaxConnectionsText = databaseInfo.max_connections.toString();
     databaseOpenConnectionstionText =
       databaseInfo.opened_connections.toString();
@@ -58,7 +58,11 @@ function DatabaseInfo() {
         <b>Banco de Dados:</b>
       </span>
       <ul>
-        <li>Versão:{databaseVersionText}</li>
+        <li>
+          {databaseVersionText != null && databaseVersionText != undefined
+            ? `Versão:${databaseVersionText}`
+            : "Versão:..."}
+        </li>
         <li>Limite de conexões:{databaseMaxConnectionsText}</li>
         <li>Conexões abertas:{databaseOpenConnectionstionText}</li>
       </ul>
